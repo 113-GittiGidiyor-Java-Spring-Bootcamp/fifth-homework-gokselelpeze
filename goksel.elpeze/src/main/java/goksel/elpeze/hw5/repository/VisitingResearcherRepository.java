@@ -1,18 +1,15 @@
 package goksel.elpeze.hw5.repository;
 
-import goksel.elpeze.hw5.model.Instructor;
 import goksel.elpeze.hw5.model.VisitingResearcher;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface VisitingResearcherRepository extends InstructorRepository {
 
-    // get 3 instructors with the greatest salary
-    List<VisitingResearcher> findFirst3VisitingResearchersByOrderByHourlySalaryDesc();
+    @Query("UPDATE VisitingResearcher SET hourlySalary = hourlySalary + (hourlySalary * ?1) WHERE id=?2")
+    void updateSalaryOfVisitingResearcher(int instructorId, double percentage);
 
-    //get 3 instructors with the lowest salary
-    List<VisitingResearcher> findFirst3VisitingResearchersByOrderByHourlySalaryAsc();
-
+    @Query("select i from VisitingResearcher i where i.id=?1")
+    VisitingResearcher getVisitingResearcherById(int instructorId);
 }

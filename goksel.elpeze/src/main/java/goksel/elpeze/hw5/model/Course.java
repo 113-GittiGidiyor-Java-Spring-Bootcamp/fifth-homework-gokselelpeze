@@ -14,7 +14,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
@@ -23,7 +25,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class Course extends BaseEntity{
-//public class Course{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -40,7 +41,7 @@ public class Course extends BaseEntity{
     private int creditScore;
 
     @ManyToMany
-    private List<Student> students = new ArrayList<>();
+    private Set<Student> students = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "id_instructor")

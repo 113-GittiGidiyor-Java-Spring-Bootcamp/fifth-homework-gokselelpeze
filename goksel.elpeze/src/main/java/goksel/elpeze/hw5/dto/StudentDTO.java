@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentDTO {
+
     @ApiModelProperty(hidden = true)
     private long id;
 
@@ -21,9 +22,9 @@ public class StudentDTO {
     @NotBlank(message = "Name is mandatory")
     private String name;
 
-    @ApiModelProperty(example = "01.01.1996")
+    @ApiModelProperty(example = "1996-04-24")
     @NotNull(message = "Birthdate is mandatory")
-    @DateTimeFormat
+    @DateTimeFormat(pattern = "YYYY-MM-DD")
     private LocalDate birthdate;
 
     @ApiModelProperty(example = "Istanbul")

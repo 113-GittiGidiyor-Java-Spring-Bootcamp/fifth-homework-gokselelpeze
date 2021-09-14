@@ -26,6 +26,28 @@ public class InstructorController {
         this.instructorService = instructorService;
     }
 
+    @PutMapping("/instructors/permanentInstructor/salary/{instructorId}{percentage}")
+    public ResponseEntity<?> updateSalaryOfPermanentInstructor(@PathVariable int instructorId, @PathVariable double percentage) {
+        if (instructorService.existsById(instructorId)) {
+            String clientInfo = "test";
+            instructorService.updateSalaryOfPermanentInstructor(instructorId, clientInfo, percentage);
+            return new ResponseEntity<>("Instructor with id: " + instructorId + "'s salary is changed by " + percentage, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Instructor with id: " + instructorId + " not found.", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/instructors/visitingresearcher/salary/{instructorId}{percentage}")
+    public ResponseEntity<?> updateSalaryOfVisitingResearcher(@PathVariable int instructorId, @PathVariable double percentage) {
+        if (instructorService.existsById(instructorId)) {
+            String clientInfo = "test";
+            instructorService.updateSalaryOfVisitingResearcher(instructorId, clientInfo, percentage);
+            return new ResponseEntity<>("Instructor with id: " + instructorId + "'s salary is changed by " + percentage, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Instructor with id: " + instructorId + " not found.", HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping("/instructors")
     public ResponseEntity<?> findAllInstructors() {
         List<Instructor> result = instructorService.findAllInstructors();
@@ -34,12 +56,8 @@ public class InstructorController {
     }
 
     @GetMapping("/instructors/{instructorId}")
-    public ResponseEntity<?> findInstructorById(@PathVariable @Valid int instructorId) {
-        Optional<Instructor> resultOptional = instructorService.findInstructorById(instructorId);
-        if (resultOptional.isPresent()) {
-            return new ResponseEntity<>(resultOptional.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> findInstructorById(@PathVariable int instructorId) {
+        return new ResponseEntity<>(instructorService.findInstructorById(instructorId), HttpStatus.OK);
     }
 
     @PostMapping("/instructors/permanentInstructor")
@@ -124,25 +142,4 @@ public class InstructorController {
             return new ResponseEntity<>("Instructor with name: " + name + " deleted.", HttpStatus.OK);
         }
     }
-
-    @GetMapping("/instructors/permanentInstructor/top3")
-    public ResponseEntity<?> findFirst3PermanentInstructorsByOrderByFixedSalaryDesc() {
-        return new ResponseEntity<>(instructorService.findFirst3PermanentInstructorsByOrderByFixedSalaryDesc(), HttpStatus.OK);
-    }
-
-    @GetMapping("/instructors/permanentInstructor/last3")
-    public ResponseEntity<?> findFirst3PermanentInstructorsByOrderByFixedSalaryAsc() {
-        return new ResponseEntity<>(instructorService.findFirst3PermanentInstructorsByOrderByFixedSalaryAsc(), HttpStatus.OK);
-    }
-
-    @GetMapping("/instructors/visitingResearcher/top3")
-    public ResponseEntity<?> findFirst3VisitingResearchersByOrderByHourlySalaryDesc() {
-        return new ResponseEntity<>(instructorService.findFirst3VisitingResearchersByOrderByHourlySalaryDesc(), HttpStatus.OK);
-    }
-
-    @GetMapping("/instructors/visitingResearcher/last3")
-    public ResponseEntity<?> findFirst3VisitingResearchersByOrderByHourlySalaryAsc() {
-        return new ResponseEntity<>(instructorService.findFirst3VisitingResearchersByOrderByHourlySalaryAsc(), HttpStatus.OK);
-    }
-
 }

@@ -5,33 +5,39 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CourseDTO {
     @ApiModelProperty(hidden = true)
-    private long id;
+    private int id;
 
-    @ApiModelProperty(example = "Gökhan Göksel Elpeze")
-    @NotBlank(message = "Name is mandatory")
-    private String name;
+    @ApiModelProperty(example = "Data Structrues")
+    @NotBlank(message = "Course name is mandatory.")
+    private String courseName;
 
-    @ApiModelProperty(example = "01.01.1996")
-    @NotNull(message = "Birthdate is mandatory")
-    @DateTimeFormat
-    private LocalDate birthdate;
+    @ApiModelProperty(example = "CME3204")
+    @NotBlank(message = "Course code is mandatory.")
+    private String courseCode;
 
-    @ApiModelProperty(example = "Istanbul")
-    @NotBlank(message = "Address is mandatory")
-    private String address;
+    @ApiModelProperty(example = "4")
+    @NotNull(message = "Credit score is mandatory.")
+    @NumberFormat(style = NumberFormat.Style.NUMBER)
+    private double creditScore;
 
-    @ApiModelProperty(example = "M")
-    @NotBlank(message = "Gender is mandatory")
-    private char gender;
+    @ApiModelProperty(example = "[1, 24234, 3, 453463]")
+    private List<Integer> studentIds;
+
+    @ApiModelProperty(example = "1")
+    @NumberFormat(style = NumberFormat.Style.NUMBER)
+    private int instructorId;
+
 
 }

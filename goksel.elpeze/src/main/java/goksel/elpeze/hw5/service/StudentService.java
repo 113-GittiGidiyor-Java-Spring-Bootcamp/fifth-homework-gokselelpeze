@@ -9,10 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -76,4 +76,23 @@ public class StudentService {
         studentRepository.deleteStudentsByName(name);
     }
 
+    public Set<Student> findAllStudentsById(List<Integer> studentIds) {
+        Set<Student> students = new HashSet<>();
+
+        for (int id : studentIds) {
+            students.add(studentRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Student with id: " + id + " can not be found!")));
+        }
+        return students;
+
+    }
+    public List<Integer> findAllStudentIdsByList(Set<Student> students) {
+
+        List<Integer> studentIds = new ArrayList<>();
+
+        for (Student s : students) {
+            studentIds.add(s.getId());
+        }
+        return studentIds;
+    }
 }

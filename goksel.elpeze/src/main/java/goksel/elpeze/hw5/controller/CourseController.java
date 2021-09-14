@@ -28,30 +28,17 @@ public class CourseController {
 
     @GetMapping("/courses/{courseId}")
     public ResponseEntity<?> findCourseById(@PathVariable int courseId) {
-        Optional<Course> foundCourse = courseService.findCourseById(courseId);
-        if (foundCourse.isPresent()) {
-            return new ResponseEntity<>(foundCourse, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Course with id: " + courseId + " not found.", HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(courseService.findCourseById(courseId), HttpStatus.OK);
     }
 
     @PostMapping("/courses")
     public ResponseEntity<?> saveCourse(@RequestBody CourseDTO courseDTO) {
-        Optional<Course> resultOptional = courseService.saveCourse(courseDTO);
-        if (resultOptional.isPresent()) {
-            return new ResponseEntity<>(resultOptional.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(courseService.saveCourse(courseDTO),HttpStatus.OK);
     }
 
     @PutMapping("/courses")
     public ResponseEntity<?> updateCourse(@RequestBody CourseDTO courseDTO) {
-        Optional<Course> resultOptional = courseService.saveCourse(courseDTO);
-        if (resultOptional.isPresent()) {
-            return new ResponseEntity<>(resultOptional.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(courseService.saveCourse(courseDTO),HttpStatus.OK);
     }
 
     @DeleteMapping("/courses")

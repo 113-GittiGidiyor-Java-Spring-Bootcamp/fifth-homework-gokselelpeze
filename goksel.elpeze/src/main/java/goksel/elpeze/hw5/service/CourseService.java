@@ -2,6 +2,7 @@ package goksel.elpeze.hw5.service;
 
 import goksel.elpeze.hw5.dto.CourseDTO;
 import goksel.elpeze.hw5.exceptions.CourseIsAlreadyExistException;
+import goksel.elpeze.hw5.exceptions.StudentNumberForOneCourseExceedException;
 import goksel.elpeze.hw5.mappers.CourseMapper;
 import goksel.elpeze.hw5.model.Course;
 import goksel.elpeze.hw5.repository.CourseRepository;
@@ -9,9 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -20,18 +22,19 @@ import java.util.Optional;
 public class CourseService {
 
     private final CourseRepository courseRepository;
-    private CourseMapper courseMapper;
+    private final CourseMapper courseMapper;
 
     public boolean existsById(int courseId) {
         return courseRepository.existsById(courseId);
     }
 
-    public List<Course> findAllCourses() {
-        return courseRepository.findAll();
+    public List<CourseDTO> findAllCourses() {
+        return courseRepository.findAll().stream().map(courseMapper::mapFromCoursetoCourseDTO).collect(Collectors.toList());
     }
 
-    public Optional<Course> findCourseById(int courseId) {
-        return courseRepository.findById(courseId);
+    public CourseDTO findCourseById(int courseId) {
+        return courseRepository.findById(courseId).map(courseMapper::mapFromCoursetoCourseDTO)
+                .orElseThrow(() -> new EntityNotFoundException("Course not found"));
     }
 
     /**
@@ -43,12 +46,16 @@ public class CourseService {
      * @return Optional<Course>
      */
     @Transactional
-    public Optional<Course> saveCourse(CourseDTO courseDTO) {
-        Course course = courseMapper.mapFromCourseDTOtoCourse(courseDTO);
-        if (Objects.nonNull(courseRepository.findCourseByCourseCode(course.getCourseCode()))) {
-            throw new CourseIsAlreadyExistException("Course " + course.getCourseName() + " is already exists!");
+    public CourseDTO saveCourse(CourseDTO courseDTO) {
+        if (Objects.nonNull(courseRepository.findCourseByCourseCode(courseDTO.getCourseCode()))) {
+            throw new CourseIsAlreadyExistException("Course " + courseDTO.getCourseName() + " is already exists!");
+        } else if (courseDTO.getStudentIds().size() > 20) {
+            throw new StudentNumberForOneCourseExceedException("Course " + courseDTO.getCourseName() + " is full!");
+        } else{
+            Course course = courseMapper.mapFromCourseDTOtoCourse(courseDTO);
+            courseRepository.save(course);
+            return courseMapper.mapFromCoursetoCourseDTO(course);
         }
-        return Optional.of(courseRepository.save(course));
     }
 
     @Transactional
