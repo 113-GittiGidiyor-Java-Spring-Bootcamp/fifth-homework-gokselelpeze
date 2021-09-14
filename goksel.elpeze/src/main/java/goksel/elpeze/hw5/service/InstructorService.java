@@ -117,7 +117,7 @@ public class InstructorService {
                 .orElseThrow(() -> new EntityNotFoundException("Instructor with id: " + instructorId + " can not be found!"));
     }
 
-    public void updateSalaryOfPermanentInstructor(int instructorId, String clientInfo, double percentage) {
+    public void updateSalaryOfPermanentInstructor(int instructorId, String clientInfo, int percentage) {
         PermanentInstructor permanentInstructor = permanentInstructorRepository.getPermanentInstructorById(instructorId);
         double beforeSalary = permanentInstructor.getFixedSalary();
         permanentInstructorRepository.updateSalaryOfPermanentInstructor(instructorId, percentage);
@@ -136,7 +136,7 @@ public class InstructorService {
         loggerRepository.save(logger);
     }
 
-    public void updateSalaryOfVisitingResearcher(int instructorId, String clientInfo, double percentage) {
+    public void updateSalaryOfVisitingResearcher(int instructorId, String clientInfo, int percentage) {
         VisitingResearcher visitingResearcher = visitingResearcherRepository.getVisitingResearcherById(instructorId);
         double beforeSalary = visitingResearcher.getHourlySalary();
         visitingResearcherRepository.updateSalaryOfVisitingResearcher(instructorId, percentage);

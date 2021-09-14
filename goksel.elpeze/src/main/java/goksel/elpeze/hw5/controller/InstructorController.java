@@ -3,15 +3,18 @@ package goksel.elpeze.hw5.controller;
 import goksel.elpeze.hw5.dto.PermanentInstructorDTO;
 import goksel.elpeze.hw5.dto.VisitingResearcherDTO;
 import goksel.elpeze.hw5.model.Instructor;
+import goksel.elpeze.hw5.model.Logger;
 import goksel.elpeze.hw5.model.PermanentInstructor;
 import goksel.elpeze.hw5.model.VisitingResearcher;
 import goksel.elpeze.hw5.service.InstructorService;
+import goksel.elpeze.hw5.service.LoggerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,14 +23,16 @@ import java.util.Optional;
 public class InstructorController {
 
     private final InstructorService instructorService;
+    private final LoggerService loggerService;
 
     @Autowired
-    public InstructorController(InstructorService instructorService) {
+    public InstructorController(InstructorService instructorService, LoggerService loggerService) {
         this.instructorService = instructorService;
+        this.loggerService = loggerService;
     }
 
-    @PutMapping("/instructors/permanentInstructor/salary/{instructorId}{percentage}")
-    public ResponseEntity<?> updateSalaryOfPermanentInstructor(@PathVariable int instructorId, @PathVariable double percentage) {
+    @PutMapping("/instructors/permanentInstructor/{instructorId}/{percentage}")
+    public ResponseEntity<?> updateSalaryOfPermanentInstructor(@PathVariable int instructorId, @PathVariable int percentage) {
         if (instructorService.existsById(instructorId)) {
             String clientInfo = "test";
             instructorService.updateSalaryOfPermanentInstructor(instructorId, clientInfo, percentage);
@@ -37,8 +42,8 @@ public class InstructorController {
         }
     }
 
-    @PutMapping("/instructors/visitingresearcher/salary/{instructorId}{percentage}")
-    public ResponseEntity<?> updateSalaryOfVisitingResearcher(@PathVariable int instructorId, @PathVariable double percentage) {
+    @PutMapping("/instructors/visitingresearcher/{instructorId}/{percentage}")
+    public ResponseEntity<?> updateSalaryOfVisitingResearcher(@PathVariable int instructorId, @PathVariable int percentage) {
         if (instructorService.existsById(instructorId)) {
             String clientInfo = "test";
             instructorService.updateSalaryOfVisitingResearcher(instructorId, clientInfo, percentage);
@@ -46,6 +51,19 @@ public class InstructorController {
         } else {
             return new ResponseEntity<>("Instructor with id: " + instructorId + " not found.", HttpStatus.BAD_REQUEST);
         }
+    }
+    @GetMapping("/instructors/salary/{id}")
+    public ResponseEntity<?> findSalaryLogById(@PathVariable int id) {
+        List<Logger> result = loggerService.findSalaryLogById(id);
+
+        return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/instructors/salary/{start}/{end}")
+    public ResponseEntity<?> findSalaryLogByDate(@RequestParam String transactionDate) {
+        List<Logger> result = loggerService.findSalaryLogByDate(transactionDate);
+
+        return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/instructors")
