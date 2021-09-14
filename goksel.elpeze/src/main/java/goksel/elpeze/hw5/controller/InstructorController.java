@@ -52,16 +52,16 @@ public class InstructorController {
             return new ResponseEntity<>("Instructor with id: " + instructorId + " not found.", HttpStatus.BAD_REQUEST);
         }
     }
-    @GetMapping("/instructors/salary/{id}")
+    @GetMapping("/instructors/salaryId/{id}")
     public ResponseEntity<?> findSalaryLogById(@PathVariable int id) {
         List<Logger> result = loggerService.findSalaryLogById(id);
 
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/instructors/salary/{start}/{end}")
-    public ResponseEntity<?> findSalaryLogByDate(@RequestParam String transactionDate) {
-        List<Logger> result = loggerService.findSalaryLogByDate(transactionDate);
+    @GetMapping("/instructors/salaryDate/{date}")
+    public ResponseEntity<?> findSalaryLogByDate(@PathVariable String date) {
+        List<Logger> result = loggerService.findSalaryLogByDate(date);
 
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
